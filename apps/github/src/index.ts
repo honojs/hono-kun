@@ -24,7 +24,6 @@ app.post('/webhooks/github', async (c) => {
   if (!verified) {
     return c.json({ ok: false, error: 'invalid signature' }, 401)
   }
-  console.log(`received webhook: event=${event} delivery=${delivery}`)
   return c.json({ ok: true }, 202)
 })
 

@@ -1,0 +1,23 @@
+.github/workflows/ci.yml
+  s_74469d32e351d4::t_307c2e1a5a30a9 8-10,15-17
+apps/github/src/index.test.ts
+  s_74469d32e351d4::t_9be599bc564bef 64-80
+apps/github/src/index.ts
+  s_74469d32e351d4::t_a9a012eb7391e3 13-16,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b5f991df261bc0d1200de3a07a68560cf8df73b5",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "unknown"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

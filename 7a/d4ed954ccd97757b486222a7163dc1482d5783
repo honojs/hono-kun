@@ -1,0 +1,41 @@
+apps/github/src/index.test.ts
+  s_74469d32e351d4::t_80fa1a4e00914a 1-70
+apps/github/src/index.ts
+  s_74469d32e351d4::t_456dfc8d2a591e 1,4-8,12-30
+packages/github/src/index.test.ts
+  s_74469d32e351d4::t_05edf52569a718 1-64
+packages/github/src/index.ts
+  s_74469d32e351d4::t_2e777bfab5e24a 2,4-42
+pnpm-lock.yaml
+  s_74469d32e351d4::t_0c695edc64012f 44-46,57-59,91-93,510-512,766-864,872-883,1004-1036,1040-1046,1058-1060,1066-1081,1095-1171,1176-1184,1217-1232,1242-1254,1259-1269,1274-1277,1293-1381,1644-1645,1772-1818,1823-1833,1894-1936,1939-1942,1949-1950,1980-1989,1997-2049,2062-2065,2116-2146,2181-2188,2191-2199,2202-2203,2236-2276
+.gitignore
+  s_74469d32e351d4::t_68b23e0e84ec99 10
+AGENTS.md
+  s_74469d32e351d4::t_a4564e4a8aedd9 11,50,66-67
+README.md
+  s_74469d32e351d4::t_c869df381c2a95 12,55
+apps/github/package.json
+  s_74469d32e351d4::t_47a247a4559f75 9,13,19
+package.json
+  s_74469d32e351d4::t_1a177d1c439a03 11
+packages/github/package.json
+  s_74469d32e351d4::t_3201278c1f2fdd 10,14-15
+packages/github/tsconfig.json
+  s_74469d32e351d4::t_9e861d2d2ed432 3-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "7ad4ed954ccd97757b486222a7163dc1482d5783",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

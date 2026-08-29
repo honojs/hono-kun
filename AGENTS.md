@@ -8,7 +8,7 @@ Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deploye
 
 ## Current status
 
-Scaffold only. No PR triage, GitHub App logic, AI agents, or Cloudflare Sandbox execution is implemented yet. Do not implement features that have not been requested.
+Early days. `apps/github` receives GitHub webhook deliveries and verifies their signatures (via `@hono-kun/github`); nothing is done with the events yet. No PR triage, AI agents, or Cloudflare Sandbox execution is implemented. Do not implement features that have not been requested.
 
 ## Repository layout
 
@@ -47,9 +47,8 @@ Scaffold only. No PR triage, GitHub App logic, AI agents, or Cloudflare Sandbox 
    ```sh
    pnpm format && pnpm lint:fix
    pnpm typecheck
+   pnpm test
    ```
-
-   (`pnpm test` and per-app builds will join the gates once they exist.)
 
 4. Commit with conventional commits: `<type>(<scope>): <description>`. Example: `feat(publisher): add comment endpoint`.
 5. Open a PR against `main`. Keep the body short: what and why, in a few sentences. No fixed section labels — write it like a human note. Add notes the checklist does not cover as plain sentences. Use bullets only when there are several items. Add `Closes #<n>` only if an issue exists. End the body with the checklist from `.github/pull_request_template.md` and check the items you did.
@@ -64,6 +63,8 @@ One PR = one concern. Do not force-push a branch under review.
 - pnpm workspaces; all workspace packages are named `@hono-kun/*` and reference each other with the `workspace:*` protocol.
 - No build step for internal packages: `exports` points at TypeScript source (`./src/index.ts`); Workers are bundled by Wrangler.
 - TypeScript 7. Every package extends the root `tsconfig.json` and has a `typecheck` script (`tsc --noEmit`). Run `pnpm typecheck` at the root.
+- Tests use [Vitest](https://vitest.dev/) (`pnpm test` at the root, `vitest run` per package). Hono apps are tested with `app.request()` — no running server needed.
+- Worker secrets (e.g. `GITHUB_WEBHOOK_SECRET` for `apps/github`) are set with `wrangler secret put`; locally, put them in a gitignored `.dev.vars` in the app directory.
 - Linting and formatting use the [Oxc](https://oxc.rs/) toolchain: oxlint (`pnpm lint`) and oxfmt (`pnpm format` / `pnpm format:check`, configured in `.oxfmtrc.json`).
 - Do not hard-wrap prose in Markdown files — write each paragraph and list item on a single line.
 - HTTP applications use Hono. Agents will be built with Flue (`@flue/sdk` / `@flue/runtime`, https://github.com/withastro/flue) — not added as a dependency until agents are actually implemented.

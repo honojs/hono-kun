@@ -8,6 +8,7 @@
   },
   "scripts": {
     "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",

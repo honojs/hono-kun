@@ -9,7 +9,7 @@ Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono).
 Its first feature is pull request triage, but the architecture is deliberately not PR-specific: future features may include issue triage, issue reproduction, coding, and other repository maintenance tasks.
 
 > [!NOTE]
-> This project is at a very early stage. The repository currently contains only the monorepo scaffold — no features are implemented yet.
+> This project is at a very early stage — nothing useful is implemented yet.
 
 ## Architecture
 
@@ -52,6 +52,7 @@ Requirements: Node.js >= 20 and [pnpm](https://pnpm.io/).
 ```sh
 pnpm install
 pnpm typecheck
+pnpm test
 pnpm lint
 pnpm format
 ```

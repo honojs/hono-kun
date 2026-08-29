@@ -61,6 +61,23 @@ describe('POST /webhooks/github', () => {
     expect(res.status).toBe(401)
   })
 
+  it('fails closed when the secret is not configured', async () => {
+    const res = await app.request(
+      '/webhooks/github',
+      {
+        method: 'POST',
+        body,
+        headers: {
+          'x-github-event': 'pull_request',
+          'x-github-delivery': 'delivery-id',
+          'x-hub-signature-256': await sign(secret, body),
+        },
+      },
+      { GITHUB_WEBHOOK_SECRET: '' },
+    )
+    expect(res.status).toBe(500)
+  })
+
   it('rejects a delivery without webhook headers', async () => {
     const res = await deliver(body, {
       'x-hub-signature-256': await sign(secret, body),

@@ -1,0 +1,21 @@
+.github/workflows/deploy.yml
+  s_74469d32e351d4::t_55844a315826be 1-28
+AGENTS.md
+  s_74469d32e351d4::t_69cf958c5b42eb 73-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "dd5f9ea8c86c734dbbe0ccdf8740ba0fffd9e596",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "unknown"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

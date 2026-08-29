@@ -1,0 +1,61 @@
+.oxfmtrc.json
+  s_74469d32e351d4::t_42be0f3186bf54 1-15
+agents/coder/package.json
+  s_74469d32e351d4::t_ba6883355aeda7 1-15
+agents/contributor/package.json
+  s_74469d32e351d4::t_cb254a24d64ce3 1-15
+agents/reviewer/package.json
+  s_74469d32e351d4::t_85b69ef10c16dd 1-15
+agents/verifier/package.json
+  s_74469d32e351d4::t_6959093f4d8259 1-15
+apps/github/package.json
+  s_74469d32e351d4::t_9382d302f26413 1-19
+apps/github/wrangler.jsonc
+  s_74469d32e351d4::t_5094b6ae2d18e6 1-6
+apps/publisher/package.json
+  s_74469d32e351d4::t_f0917c31cacbdf 1-19
+apps/publisher/wrangler.jsonc
+  s_74469d32e351d4::t_c2849936860e82 1-6
+packages/config/package.json
+  s_74469d32e351d4::t_fdf3c77b560b90 1-15
+packages/github/package.json
+  s_74469d32e351d4::t_510fb983b7a83a 1-15
+packages/policy/package.json
+  s_74469d32e351d4::t_bcce345267ced3 1-18
+packages/sandbox/package.json
+  s_74469d32e351d4::t_79e443175e20fb 1-15
+packages/schemas/package.json
+  s_74469d32e351d4::t_42807bbfc83a57 1-15
+pnpm-lock.yaml
+  s_74469d32e351d4::t_c9ca046fa82408 1-1647
+workflows/pull-request/package.json
+  s_74469d32e351d4::t_626f2c7f0389d2 1-18
+.github/pull_request_template.md
+  s_74469d32e351d4::t_7ae0f93618df71 1-7
+AGENTS.md
+  s_74469d32e351d4::t_79e4799306cd72 1-71
+README.md
+  s_74469d32e351d4::t_74c5e1b1ee30da 1-77
+evals/README.md
+  s_74469d32e351d4::t_04e213fa0ea98a 1-3
+package.json
+  s_74469d32e351d4::t_4729d5feb700e6 1-20
+skills/README.md
+  s_74469d32e351d4::t_718e2b63a91fc0 1-3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "91be8d7ef337e9f65a7ee39fb55ad5001b573b5a",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

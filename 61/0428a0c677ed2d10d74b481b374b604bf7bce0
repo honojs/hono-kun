@@ -1,0 +1,19 @@
+apps/github/wrangler.jsonc
+  s_74469d32e351d4::t_55e5333f20abac 7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "610428a0c677ed2d10d74b481b374b604bf7bce0",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

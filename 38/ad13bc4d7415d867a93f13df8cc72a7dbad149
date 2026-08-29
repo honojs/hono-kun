@@ -1,0 +1,19 @@
+README.md
+  s_74469d32e351d4::t_79355f6d3e6202 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "38ad13bc4d7415d867a93f13df8cc72a7dbad149",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "unknown"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

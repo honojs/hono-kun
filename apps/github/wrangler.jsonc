@@ -6,4 +6,7 @@
   "workers_dev": false,
   "routes": [{ "pattern": "hono-kun-github.hono.dev", "custom_domain": true }],
   "observability": { "enabled": true },
+  "kv_namespaces": [
+    { "binding": "DELIVERIES", "id": "8547d35113874ca68efc679c98df8388" },
+  ],
 }

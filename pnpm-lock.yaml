@@ -44,6 +44,9 @@ importers:
       '@hono-kun/github':
         specifier: workspace:*
         version: link:../../packages/github
+      '@hono-kun/workflow-pull-request':
+        specifier: workspace:*
+        version: link:../../workflows/pull-request
       hono:
         specifier: ^4.13.5
         version: 4.13.5
@@ -84,6 +87,10 @@ importers:
         version: 7.0.2
 
   packages/github:
+    dependencies:
+      '@hono-kun/schemas':
+        specifier: workspace:*
+        version: link:../schemas
     devDependencies:
       typescript:
         specifier: ^7.0.2
@@ -116,9 +123,9 @@ importers:
 
   workflows/pull-request:
     dependencies:
-      '@hono-kun/policy':
+      '@hono-kun/schemas':
         specifier: workspace:*
-        version: link:../../packages/policy
+        version: link:../../packages/schemas
     devDependencies:
       typescript:
         specifier: ^7.0.2

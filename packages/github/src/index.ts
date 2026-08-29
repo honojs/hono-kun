@@ -2,7 +2,60 @@
  * Read-side GitHub helpers. Write operations never live here — they belong exclusively to apps/publisher.
  */
 
+import type { PullRequestEvent } from '@hono-kun/schemas'
+
 const encoder = new TextEncoder()
+
+const isRecord = (v: unknown): v is Record<string, unknown> =>
+  typeof v === 'object' && v !== null
+
+/**
+ * Extracts a normalized {@link PullRequestEvent} from a `pull_request` webhook payload.
+ *
+ * @param payload - The parsed JSON body of the webhook delivery.
+ * @returns The normalized event, or `null` when the payload does not have the expected shape.
+ */
+export const toPullRequestEvent = (
+  payload: unknown,
+): PullRequestEvent | null => {
+  if (!isRecord(payload)) {
+    return null
+  }
+  const { action, number, repository, pull_request: pr } = payload
+  if (
+    typeof action !== 'string' ||
+    typeof number !== 'number' ||
+    !isRecord(repository) ||
+    !isRecord(pr)
+  ) {
+    return null
+  }
+  const owner = repository.owner
+  if (
+    !isRecord(owner) ||
+    typeof owner.login !== 'string' ||
+    typeof repository.name !== 'string'
+  ) {
+    return null
+  }
+  const user = pr.user
+  if (
+    typeof pr.title !== 'string' ||
+    typeof pr.html_url !== 'string' ||
+    !isRecord(user) ||
+    typeof user.login !== 'string'
+  ) {
+    return null
+  }
+  return {
+    action,
+    number,
+    repository: { owner: owner.login, repo: repository.name },
+    title: pr.title,
+    author: user.login,
+    url: pr.html_url,
+  }
+}
 
 const SIGNATURE_PREFIX = 'sha256='
 const HEX_64 = /^[0-9a-f]{64}$/

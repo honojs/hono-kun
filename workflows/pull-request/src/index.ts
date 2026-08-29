@@ -1,10 +1,8 @@
-import type { PolicyService } from '@hono-kun/policy'
+import type { PullRequestEvent } from '@hono-kun/schemas'
 
 /**
- * Pull request triage workflow: will orchestrate agents over incoming
- * pull requests, consulting a PolicyService for decisions.
- * Not implemented yet.
+ * Entry point for pull request events. Triage will be orchestrated from here; for now the event is accepted and dropped.
  */
-export interface PullRequestWorkflowDeps {
-  policy: PolicyService
-}
+export const handlePullRequestEvent = async (
+  _event: PullRequestEvent,
+): Promise<void> => {}

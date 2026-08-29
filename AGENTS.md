@@ -8,7 +8,7 @@ Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deploye
 
 ## Current status
 
-Early days. `apps/github` receives GitHub webhook deliveries and verifies their signatures (via `@hono-kun/github`); nothing is done with the events yet. No PR triage, AI agents, or Cloudflare Sandbox execution is implemented. Do not implement features that have not been requested.
+Early days. `apps/github` receives GitHub webhook deliveries, verifies their signatures (via `@hono-kun/github`), deduplicates delivery ids in KV, and routes `pull_request` events to `@hono-kun/workflow-pull-request` — where the handler is still a no-op. No PR triage, AI agents, or Cloudflare Sandbox execution is implemented. Do not implement features that have not been requested.
 
 ## Repository layout
 

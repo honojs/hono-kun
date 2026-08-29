@@ -2,9 +2,9 @@
 
 Guidance for AI coding agents (and humans) working on this repository.
 
-## What is hono-kun?
+## What is Hono-kun?
 
-hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deployed as Cloudflare Workers. Its first feature is pull request triage, but nothing in the architecture may be PR-specific: issue triage, issue reproduction, coding, and other maintenance tasks will be added later.
+Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deployed as Cloudflare Workers. Its first feature is pull request triage, but nothing in the architecture may be PR-specific: issue triage, issue reproduction, coding, and other maintenance tasks will be added later.
 
 ## Current status
 
@@ -69,3 +69,4 @@ One PR = one concern. Do not force-push a branch under review.
 - HTTP applications use Hono. Agents will be built with Flue (`@flue/sdk` / `@flue/runtime`, https://github.com/withastro/flue) — not added as a dependency until agents are actually implemented.
 - Deployment target is Cloudflare Workers (`wrangler.jsonc` per app).
 - Documentation, code comments, and commit messages are in English.
+- The product name is written "Hono-kun" in prose. The repository, directory paths, and package scope stay lowercase (`hono-kun`, `@hono-kun/*`).

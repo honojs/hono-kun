@@ -1,3 +1,3 @@
 # Evals
 
-Evaluation suites for hono-kun agents and workflows. Empty for now.
+Evaluation suites for Hono-kun agents and workflows. Empty for now.

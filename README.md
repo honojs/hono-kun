@@ -1,6 +1,10 @@
-# hono-kun
+<p align="center">
+  <img src="docs/hono-kun.jpg" width="320" alt="Hono-kun" />
+</p>
 
-hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono).
+# Hono-kun
+
+Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono).
 
 Its first feature is pull request triage, but the architecture is deliberately not PR-specific: future features may include issue triage, issue reproduction, coding, and other repository maintenance tasks.
 
@@ -9,9 +13,9 @@ Its first feature is pull request triage, but the architecture is deliberately n
 
 ## Architecture
 
-hono-kun is a set of Cloudflare Workers and workspace packages with a strict trust boundary between reading from GitHub and writing to GitHub:
+Hono-kun is a set of Cloudflare Workers and workspace packages with a strict trust boundary between reading from GitHub and writing to GitHub:
 
-- **`apps/github`** — the public GitHub-facing Worker. It receives GitHub events and exposes hono-kun's HTTP surface. Built with Hono.
+- **`apps/github`** — the public GitHub-facing Worker. It receives GitHub events and exposes Hono-kun's HTTP surface. Built with Hono.
 - **`apps/publisher`** — a separate trusted Worker that is the _only_ component holding privileged GitHub write credentials. Everything that posts comments, adds labels, or otherwise writes to GitHub goes through it.
 - **`agents/*`** — AI agents (verifier, reviewer, contributor, coder) that analyze and produce results. Agents never receive GitHub write credentials; they hand results to the publisher. Agents will be built with [Flue](https://github.com/withastro/flue).
 - **`workflows/*`** — orchestration of agents for a concrete task, such as pull request triage.

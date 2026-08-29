@@ -1,0 +1,39 @@
+apps/github/src/index.test.ts
+  s_74469d32e351d4::t_45b1bddace8cf0 7-21,38-42,45-61,64,71-84,86-93,95-96,102-104,110,118-119,123-130
+apps/github/src/index.ts
+  s_74469d32e351d4::t_1a06e830fd65c9 1-2,7,10-12,36-53
+packages/github/src/index.test.ts
+  s_74469d32e351d4::t_32ba94511d1518 2,65-103
+packages/github/src/index.ts
+  s_74469d32e351d4::t_77e2b7f03afba3 5-6,9-59
+pnpm-lock.yaml
+  s_74469d32e351d4::t_07175318141109 47-49,90-93,126,128
+workflows/pull-request/src/index.ts
+  s_74469d32e351d4::t_8c488320c744a7 1,4,6-8
+AGENTS.md
+  s_74469d32e351d4::t_bd238c3ac3d79c 11
+apps/github/package.json
+  s_74469d32e351d4::t_0cdf669a71a9d2 14
+packages/github/package.json
+  s_74469d32e351d4::t_223fc815a92e76 13-15
+packages/schemas/src/index.ts
+  s_74469d32e351d4::t_ad177a7c3207bf 6-16
+workflows/pull-request/package.json
+  s_74469d32e351d4::t_1558b43c6f595e 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "e2ead654c6951c447f6ba3f31d57d774909defab",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

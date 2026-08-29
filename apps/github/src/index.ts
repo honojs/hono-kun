@@ -10,6 +10,10 @@ const app = new Hono<{ Bindings: Bindings }>()
 app.get('/', (c) => c.json({ name: 'hono-kun', service: 'github' }))
 
 app.post('/webhooks/github', async (c) => {
+  const secret = c.env.GITHUB_WEBHOOK_SECRET
+  if (!secret) {
+    return c.json({ ok: false, error: 'webhook secret is not configured' }, 500)
+  }
   const event = c.req.header('x-github-event')
   const delivery = c.req.header('x-github-delivery')
   if (!event || !delivery) {
@@ -17,7 +21,7 @@ app.post('/webhooks/github', async (c) => {
   }
   const body = await c.req.text()
   const verified = await verifyWebhookSignature(
-    c.env.GITHUB_WEBHOOK_SECRET,
+    secret,
     body,
     c.req.header('x-hub-signature-256'),
   )

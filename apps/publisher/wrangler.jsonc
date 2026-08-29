@@ -1,0 +1,6 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hono-kun-publisher",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+}

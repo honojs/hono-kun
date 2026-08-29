@@ -2,7 +2,7 @@
 .claude/skills
 
 dist
-sandbox
+/sandbox
 
 # Cloudflare Workers
 worker

@@ -1,0 +1,71 @@
+# AGENTS.md
+
+Guidance for AI coding agents (and humans) working on this repository.
+
+## What is hono-kun?
+
+hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deployed as Cloudflare Workers. Its first feature is pull request triage, but nothing in the architecture may be PR-specific: issue triage, issue reproduction, coding, and other maintenance tasks will be added later.
+
+## Current status
+
+Scaffold only. No PR triage, GitHub App logic, AI agents, or Cloudflare Sandbox execution is implemented yet. Do not implement features that have not been requested.
+
+## Repository layout
+
+| Path                     | Package                           | Purpose                                         |
+| ------------------------ | --------------------------------- | ----------------------------------------------- |
+| `apps/github`            | `@hono-kun/app-github`            | Public GitHub-facing Worker (Hono)              |
+| `apps/publisher`         | `@hono-kun/app-publisher`         | Trusted Worker for privileged GitHub writes     |
+| `agents/verifier`        | `@hono-kun/agent-verifier`        | Verifies changes behave as claimed              |
+| `agents/reviewer`        | `@hono-kun/agent-reviewer`        | Reviews code changes                            |
+| `agents/contributor`     | `@hono-kun/agent-contributor`     | Interacts with contributors                     |
+| `agents/coder`           | `@hono-kun/agent-coder`           | Writes and modifies code                        |
+| `workflows/pull-request` | `@hono-kun/workflow-pull-request` | PR triage orchestration                         |
+| `packages/github`        | `@hono-kun/github`                | Read-side GitHub helpers                        |
+| `packages/sandbox`       | `@hono-kun/sandbox`               | Cloudflare Sandbox execution helpers            |
+| `packages/schemas`       | `@hono-kun/schemas`               | Shared types                                    |
+| `packages/policy`        | `@hono-kun/policy`                | Policy decision interfaces (contract only)      |
+| `packages/config`        | `@hono-kun/config`                | Shared runtime configuration                    |
+| `skills/`                | —                                 | Skills used by agents (not a workspace package) |
+| `evals/`                 | —                                 | Evaluation suites (not a workspace package)     |
+
+## Architecture rules (do not violate)
+
+1. `apps/github` is the public GitHub-facing Worker; it handles untrusted input from GitHub.
+2. `apps/publisher` is the only component allowed to hold privileged GitHub write credentials. All GitHub write operations go through it.
+3. Agents must never directly receive GitHub write credentials.
+4. `packages/policy` defines interfaces/types only. The real Hono production policy lives in a separate private Worker/repository and will be connected via a Cloudflare Service Binding. This public repository must always build and typecheck without that private policy service.
+5. Keep packages minimal. No speculative abstractions; no functionality that has not been requested.
+6. Do not add Turborepo, Nx, or similar — plain package.json scripts with `pnpm -r` are enough.
+
+## Pull Request Workflow
+
+1. Branch from latest `main`: `<type>/<short-slug>`. `<type>` is `feat` / `fix` / `chore` / `docs` / `refactor`.
+2. Implement.
+3. Run the quality gates. All must pass:
+
+   ```sh
+   pnpm format && pnpm lint:fix
+   pnpm typecheck
+   ```
+
+   (`pnpm test` and per-app builds will join the gates once they exist.)
+
+4. Commit with conventional commits: `<type>(<scope>): <description>`. Example: `feat(publisher): add comment endpoint`.
+5. Open a PR against `main`. Keep the body short: what and why, in a few sentences. No fixed section labels — write it like a human note. Add notes the checklist does not cover as plain sentences. Use bullets only when there are several items. Add `Closes #<n>` only if an issue exists. End the body with the checklist from `.github/pull_request_template.md` and check the items you did.
+6. Self-review the diff with the checklist from the PR template before asking for review.
+
+**No AI attribution.** Do not add `Co-Authored-By`, session links, or "Generated with ..." to commits or PR bodies.
+
+One PR = one concern. Do not force-push a branch under review.
+
+## Conventions
+
+- pnpm workspaces; all workspace packages are named `@hono-kun/*` and reference each other with the `workspace:*` protocol.
+- No build step for internal packages: `exports` points at TypeScript source (`./src/index.ts`); Workers are bundled by Wrangler.
+- TypeScript 7. Every package extends the root `tsconfig.json` and has a `typecheck` script (`tsc --noEmit`). Run `pnpm typecheck` at the root.
+- Linting and formatting use the [Oxc](https://oxc.rs/) toolchain: oxlint (`pnpm lint`) and oxfmt (`pnpm format` / `pnpm format:check`, configured in `.oxfmtrc.json`).
+- Do not hard-wrap prose in Markdown files — write each paragraph and list item on a single line.
+- HTTP applications use Hono. Agents will be built with Flue (`@flue/sdk` / `@flue/runtime`, https://github.com/withastro/flue) — not added as a dependency until agents are actually implemented.
+- Deployment target is Cloudflare Workers (`wrangler.jsonc` per app).
+- Documentation, code comments, and commit messages are in English.

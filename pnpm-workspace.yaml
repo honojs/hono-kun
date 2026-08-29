@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+  - agents/*
+  - workflows/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - esbuild
+  - workerd

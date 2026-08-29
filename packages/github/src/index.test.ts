@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { verifyWebhookSignature } from './index'
+import { toPullRequestEvent, verifyWebhookSignature } from './index'
 
 const encoder = new TextEncoder()
 
@@ -60,5 +60,44 @@ describe('verifyWebhookSignature', () => {
 
   it('rejects a malformed hex digest', async () => {
     expect(await verifyWebhookSignature(secret, body, 'sha256=zz')).toBe(false)
+  })
+})
+
+describe('toPullRequestEvent', () => {
+  const payload = {
+    action: 'opened',
+    number: 42,
+    repository: { name: 'hono', owner: { login: 'honojs' } },
+    pull_request: {
+      title: 'feat: add thing',
+      html_url: 'https://github.com/honojs/hono/pull/42',
+      user: { login: 'someone' },
+    },
+  }
+
+  it('normalizes a pull_request payload', () => {
+    expect(toPullRequestEvent(payload)).toEqual({
+      action: 'opened',
+      number: 42,
+      repository: { owner: 'honojs', repo: 'hono' },
+      title: 'feat: add thing',
+      author: 'someone',
+      url: 'https://github.com/honojs/hono/pull/42',
+    })
+  })
+
+  it('returns null for non-object payloads', () => {
+    expect(toPullRequestEvent(null)).toBeNull()
+    expect(toPullRequestEvent('x')).toBeNull()
+  })
+
+  it('returns null when required fields are missing or mistyped', () => {
+    expect(toPullRequestEvent({ ...payload, action: 1 })).toBeNull()
+    expect(
+      toPullRequestEvent({ ...payload, repository: { name: 'hono' } }),
+    ).toBeNull()
+    expect(
+      toPullRequestEvent({ ...payload, pull_request: { title: 'x' } }),
+    ).toBeNull()
   })
 })

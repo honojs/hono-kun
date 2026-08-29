@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hono-kun/github": "workspace:*",
+    "@hono-kun/workflow-pull-request": "workspace:*",
     "hono": "^4.13.5"
   },
   "devDependencies": {

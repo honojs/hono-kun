@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@hono-kun/policy": "workspace:*"
+    "@hono-kun/schemas": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^7.0.2"

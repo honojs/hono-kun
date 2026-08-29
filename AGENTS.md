@@ -50,6 +50,8 @@ Early days. `apps/github` receives GitHub webhook deliveries and verifies their 
    pnpm test
    ```
 
+   CI (`.github/workflows/ci.yml`) runs the same gates (`format:check`, `lint`, `typecheck`, `test`) on every PR.
+
 4. Commit with conventional commits: `<type>(<scope>): <description>`. Example: `feat(publisher): add comment endpoint`.
 5. Open a PR against `main`. Keep the body short: what and why, in a few sentences. No fixed section labels — write it like a human note. Add notes the checklist does not cover as plain sentences. Use bullets only when there are several items. Add `Closes #<n>` only if an issue exists. End the body with the checklist from `.github/pull_request_template.md` and check the items you did.
 6. Self-review the diff with the checklist from the PR template before asking for review.

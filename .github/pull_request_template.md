@@ -1,7 +1,7 @@
-<!-- What and why, in a few sentences. -->
+### The author should do the following, if applicable
 
----
-
-- [ ] `pnpm typecheck`, `pnpm lint`, and `pnpm format:check` pass
-- [ ] Architecture rules hold (GitHub write credentials only in `apps/publisher`; `packages/policy` stays contract-only)
-- [ ] Docs updated if behavior or structure changed (README.md / AGENTS.md)
+- [ ] Add tests
+- [ ] Run tests
+- [ ] `pnpm format && pnpm lint:fix` to format the code
+- [ ] `pnpm typecheck` to check types
+- [ ] Add [TSDoc](https://tsdoc.org/)/[JSDoc](https://jsdoc.app/about-getting-started) to document the code

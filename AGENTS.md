@@ -70,6 +70,7 @@ One PR = one concern. Do not force-push a branch under review.
 - Linting and formatting use the [Oxc](https://oxc.rs/) toolchain: oxlint (`pnpm lint`) and oxfmt (`pnpm format` / `pnpm format:check`, configured in `.oxfmtrc.json`).
 - Do not hard-wrap prose in Markdown files — write each paragraph and list item on a single line.
 - HTTP applications use Hono. Agents will be built with Flue (`@flue/sdk` / `@flue/runtime`, https://github.com/withastro/flue) — not added as a dependency until agents are actually implemented.
-- Deployment target is Cloudflare Workers (`wrangler.jsonc` per app).
+- Deployment target is Cloudflare Workers (`wrangler.jsonc` per app). Custom domains follow "worker name = subdomain" (e.g. `hono-kun-github.hono.dev`); `hono-kun.hono.dev` is reserved for a future public-facing page.
+- Merges to `main` deploy `apps/github` automatically via `.github/workflows/deploy.yml`. Do not deploy manually except in emergencies.
 - Documentation, code comments, and commit messages are in English.
 - The product name is written "Hono-kun" in prose. The repository, directory paths, and package scope stay lowercase (`hono-kun`, `@hono-kun/*`).

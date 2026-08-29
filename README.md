@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/hono-kun-transparent.png" width="320" alt="Hono-kun" />
+  <img src="docs/hono-kun.png" width="320" alt="Hono-kun" />
 </p>
 
 # Hono-kun

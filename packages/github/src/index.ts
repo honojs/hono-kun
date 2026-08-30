@@ -47,6 +47,10 @@ export const toPullRequestEvent = (
   ) {
     return null
   }
+  const label =
+    isRecord(payload.label) && typeof payload.label.name === 'string'
+      ? payload.label.name
+      : undefined
   return {
     action,
     number,
@@ -54,6 +58,7 @@ export const toPullRequestEvent = (
     title: pr.title,
     author: user.login,
     url: pr.html_url,
+    ...(label === undefined ? {} : { label }),
   }
 }
 

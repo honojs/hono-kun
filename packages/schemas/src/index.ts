@@ -13,4 +13,6 @@ export interface PullRequestEvent {
   title: string
   author: string
   url: string
+  /** The label name, present only for "labeled" / "unlabeled" actions. Labeling a PR is also the manual way to invoke Hono-kun on it. */
+  label?: string
 }

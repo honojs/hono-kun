@@ -4,7 +4,7 @@ Guidance for AI coding agents (and humans) working on this repository.
 
 ## What is Hono-kun?
 
-Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deployed as Cloudflare Workers. Its first feature is pull request triage, but nothing in the architecture may be PR-specific: issue triage, issue reproduction, coding, and other maintenance tasks will be added later.
+Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deployed as Cloudflare Workers. It evaluates incoming pull requests and acts on them: good ones proceed to review; low-quality, context-blind, or suspicious ones are closed with a reason. When a closed PR points at a real issue, Hono-kun authors a replacement PR itself — referencing the original, with code it derives from scratch, never copied. Decision thresholds (what to close, what to escalate to a human) live in the private policy service, so autonomy can be dialed up gradually. Nothing in the architecture may be PR-specific: issue triage, issue reproduction, and other maintenance tasks will follow.
 
 ## Current status
 

@@ -6,10 +6,23 @@
 
 Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono).
 
-Its first feature is pull request triage, but the architecture is deliberately not PR-specific: future features may include issue triage, issue reproduction, coding, and other repository maintenance tasks.
+It evaluates incoming pull requests and acts on them: good ones proceed to review; low-quality, context-blind, or suspicious ones are closed with a reason. When a closed PR points at a real issue, Hono-kun authors a replacement PR itself — referencing the original, with code it derives from scratch.
 
 > [!NOTE]
 > This project is at a very early stage — nothing useful is implemented yet.
+
+## How it works
+
+```mermaid
+flowchart TD
+    A[Contributor opens a PR] --> B{Hono-kun evaluates}
+    B -->|good| C[Review]
+    B -->|low quality / context-blind / suspicious| D[Close with a reason]
+    D -->|the issue is real| E[Hono-kun authors a replacement PR]
+    E --> C
+```
+
+Evaluation is done by read-only agents. Every GitHub write goes through a single trusted publisher, and the decision thresholds live in a private policy service, so autonomy can be dialed up gradually. The architecture is deliberately not PR-specific: issue triage, issue reproduction, and other maintenance tasks will follow.
 
 ## Architecture
 

@@ -86,9 +86,9 @@ There is no build step for internal packages: workspace packages expose TypeScri
 - [oxlint](https://oxc.rs/) and [oxfmt](https://oxc.rs/) for linting and formatting
 - Cloudflare Workers as the deployment target
 
-## Authors
+## Author
 
-The Hono team.
+Yusuke Wada <https://github.com/yusukebe>
 
 ## License
 

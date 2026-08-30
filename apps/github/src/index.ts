@@ -48,7 +48,21 @@ app.post('/webhooks/github', async (c) => {
     }
     const pullRequestEvent = toPullRequestEvent(payload)
     if (pullRequestEvent) {
-      await handlePullRequestEvent(pullRequestEvent)
+      const trigger = await handlePullRequestEvent(pullRequestEvent)
+      if (trigger) {
+        // Shadow-mode record: what Hono-kun was asked to evaluate, visible in Workers Logs.
+        console.log(
+          JSON.stringify({
+            kind: 'evaluation-triggered',
+            trigger,
+            delivery,
+            repository: `${pullRequestEvent.repository.owner}/${pullRequestEvent.repository.repo}`,
+            number: pullRequestEvent.number,
+            author: pullRequestEvent.author,
+            url: pullRequestEvent.url,
+          }),
+        )
+      }
     }
   }
   return c.json({ ok: true }, 202)

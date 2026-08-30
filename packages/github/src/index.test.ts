@@ -86,6 +86,20 @@ describe('toPullRequestEvent', () => {
     })
   })
 
+  it('includes the label name for labeled actions', () => {
+    expect(
+      toPullRequestEvent({
+        ...payload,
+        action: 'labeled',
+        label: { name: 'ai:evaluate' },
+      }),
+    ).toMatchObject({ action: 'labeled', label: 'ai:evaluate' })
+  })
+
+  it('omits the label field when the payload has no label', () => {
+    expect(toPullRequestEvent(payload)).not.toHaveProperty('label')
+  })
+
   it('returns null for non-object payloads', () => {
     expect(toPullRequestEvent(null)).toBeNull()
     expect(toPullRequestEvent('x')).toBeNull()

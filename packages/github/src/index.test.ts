@@ -1,5 +1,45 @@
-import { describe, expect, it } from 'vitest'
-import { toPullRequestEvent, verifyWebhookSignature } from './index'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import {
+  fetchPullRequestDiff,
+  toPullRequestEvent,
+  verifyWebhookSignature,
+} from './index'
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
+describe('fetchPullRequestDiff', () => {
+  const repo = { owner: 'honojs', repo: 'hono' }
+
+  it('fetches the diff from the public .diff URL', async () => {
+    const fetchMock = vi.fn(async () => new Response('diff --git a/x b/x'))
+    vi.stubGlobal('fetch', fetchMock)
+    expect(await fetchPullRequestDiff(repo, 42)).toBe('diff --git a/x b/x')
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://github.com/honojs/hono/pull/42.diff',
+      expect.anything(),
+    )
+  })
+
+  it('returns null when the response is not ok', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('nope', { status: 404 })),
+    )
+    expect(await fetchPullRequestDiff(repo, 42)).toBeNull()
+  })
+
+  it('truncates oversized diffs', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('x'.repeat(100_000))),
+    )
+    const diff = await fetchPullRequestDiff(repo, 42)
+    expect(diff?.length).toBeLessThan(90_000)
+    expect(diff?.endsWith('… (diff truncated)')).toBe(true)
+  })
+})
 
 const encoder = new TextEncoder()
 

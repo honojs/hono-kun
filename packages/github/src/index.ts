@@ -2,9 +2,37 @@
  * Read-side GitHub helpers. Write operations never live here — they belong exclusively to apps/publisher.
  */
 
-import type { PullRequestEvent } from '@hono-kun/schemas'
+import type { PullRequestEvent, RepositoryRef } from '@hono-kun/schemas'
 
 const encoder = new TextEncoder()
+
+/** Caps what we feed to agents; beyond this a PR is too large to review meaningfully anyway. */
+const MAX_DIFF_CHARS = 80_000
+
+/**
+ * Fetches the diff of a public pull request, without authentication.
+ *
+ * @returns The diff (truncated to {@link MAX_DIFF_CHARS}), or `null` when it cannot be fetched.
+ */
+export const fetchPullRequestDiff = async (
+  repository: RepositoryRef,
+  number: number,
+): Promise<string | null> => {
+  const res = await fetch(
+    `https://github.com/${repository.owner}/${repository.repo}/pull/${number}.diff`,
+    {
+      headers: { 'user-agent': 'hono-kun' },
+      redirect: 'follow',
+    },
+  )
+  if (!res.ok) {
+    return null
+  }
+  const diff = await res.text()
+  return diff.length > MAX_DIFF_CHARS
+    ? `${diff.slice(0, MAX_DIFF_CHARS)}\n… (diff truncated)`
+    : diff
+}
 
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null

@@ -8,7 +8,7 @@ Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deploye
 
 ## Current status
 
-Early days. `apps/github` receives GitHub webhook deliveries, verifies their signatures (via `@hono-kun/github`), deduplicates delivery ids in KV, and routes `pull_request` events to `@hono-kun/workflow-pull-request`. The workflow decides whether an event starts an evaluation (a newly opened PR, or the `ai:evaluate` label being added) and the app logs that decision — shadow mode. `apps/agents` hosts the first Flue agent (Reviewer) calling Claude through the `hono-kun` AI Gateway (unified billing, no provider keys); it is not yet wired to the webhook flow. Cloudflare Sandbox execution and the other agents are not implemented. Do not implement features that have not been requested.
+Early days. `apps/github` receives GitHub webhook deliveries, verifies their signatures (via `@hono-kun/github`), deduplicates delivery ids in KV, and routes `pull_request` events to `@hono-kun/workflow-pull-request`. The workflow decides whether an event starts an evaluation (a newly opened PR, or the `ai:evaluate` label being added) and the app logs that decision — shadow mode. On a trigger, the app fetches the PR diff and submits it over a Service Binding to `apps/agents`, where the Reviewer Flue agent produces a structured verdict via Claude through the `hono-kun` AI Gateway (unified billing, no provider keys). Shadow mode: verdicts are only observable in logs — nothing is written to GitHub. Cloudflare Sandbox execution and the other agents are not implemented. Do not implement features that have not been requested.
 
 ## Repository layout
 

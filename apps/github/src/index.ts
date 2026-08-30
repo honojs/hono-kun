@@ -1,10 +1,18 @@
-import { toPullRequestEvent, verifyWebhookSignature } from '@hono-kun/github'
-import { handlePullRequestEvent } from '@hono-kun/workflow-pull-request'
+import {
+  fetchPullRequestDiff,
+  toPullRequestEvent,
+  verifyWebhookSignature,
+} from '@hono-kun/github'
+import {
+  evaluatePullRequest,
+  handlePullRequestEvent,
+} from '@hono-kun/workflow-pull-request'
 import { Hono } from 'hono'
 
 type Bindings = {
   GITHUB_WEBHOOK_SECRET: string
   DELIVERIES: KVNamespace
+  AGENTS: Fetcher
 }
 
 // GitHub does not redeliver automatically after this window, so remembering deliveries longer buys nothing.
@@ -60,6 +68,32 @@ app.post('/webhooks/github', async (c) => {
             number: pullRequestEvent.number,
             author: pullRequestEvent.author,
             url: pullRequestEvent.url,
+          }),
+        )
+        // Evaluate after responding: GitHub expects a fast ack, the model turn runs async in the agents Worker.
+        c.executionCtx.waitUntil(
+          evaluatePullRequest(pullRequestEvent, delivery, {
+            fetchDiff: fetchPullRequestDiff,
+            submitToReviewer: async (conversationId, prompt) => {
+              await c.env.AGENTS.fetch(
+                `https://hono-kun-agents/agents/reviewer/${encodeURIComponent(conversationId)}`,
+                {
+                  method: 'POST',
+                  headers: { 'content-type': 'application/json' },
+                  body: JSON.stringify({ kind: 'user', body: prompt }),
+                },
+              )
+            },
+          }).then((dispatched) => {
+            if (!dispatched) {
+              console.log(
+                JSON.stringify({
+                  kind: 'evaluation-skipped',
+                  reason: 'diff-unavailable',
+                  delivery,
+                }),
+              )
+            }
           }),
         )
       }

@@ -1,0 +1,41 @@
+AGENTS.md
+  s_b5227510c4b557::t_8cf7fc68e3f299 11
+apps/github/src/index.test.ts
+  s_74469d32e351d4::t_2d9b5280dddd3e 1,17-28,31,34-44,65,67-72,91-94,105-108,114-159,161-164
+apps/github/src/index.ts
+  s_74469d32e351d4::t_8cea427d7704c4 1-9,15,73-98
+apps/github/wrangler.jsonc
+  s_b5227510c4b557::t_3499d2c039ef36 12
+packages/github/src/index.test.ts
+  s_74469d32e351d4::t_9b28758ad7f0cd 1-42
+packages/github/src/index.ts
+  s_74469d32e351d4::t_3fd7c491ca5268 5,9-36
+workflows/pull-request/src/index.test.ts
+  s_74469d32e351d4::t_dcbd87676425cb 2-8,46-79
+workflows/pull-request/src/index.ts
+  s_74469d32e351d4::t_b7deab0582fbfc 1,23-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c2c0c436d832cde5aea5bcf502398988e803dd7b",
+  "prompts": {},
+  "sessions": {
+    "s_74469d32e351d4": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a27673c4-c805-4a2e-997d-b6ee20ed00c4",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    },
+    "s_b5227510c4b557": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "2e1fd6f3-217b-4cee-958a-5d31344bb443",
+        "model": "claude-fable-5"
+      },
+      "human_author": "Yusuke Wada <yusuke@kamawada.com>"
+    }
+  }
+}

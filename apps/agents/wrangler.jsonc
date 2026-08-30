@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hono-kun-agents",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // No route and no workers.dev: this Worker is reachable only via a Service Binding from hono-kun-github.
+  "workers_dev": false,
+  "ai": { "binding": "AI" },
+  "observability": { "enabled": true },
+  "migrations": [
+    {
+      "tag": "flue-class-FlueReviewerAgent",
+      "new_sqlite_classes": ["FlueReviewerAgent"],
+    },
+  ],
+}

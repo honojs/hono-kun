@@ -8,7 +8,7 @@ Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono), deploye
 
 ## Current status
 
-Early days. `apps/github` receives GitHub webhook deliveries, verifies their signatures (via `@hono-kun/github`), deduplicates delivery ids in KV, and routes `pull_request` events to `@hono-kun/workflow-pull-request`. The workflow decides whether an event starts an evaluation (a newly opened PR, or the `ai:evaluate` label being added) and the app logs that decision — shadow mode. The evaluation itself, AI agents, and Cloudflare Sandbox execution are not implemented. Do not implement features that have not been requested.
+Early days. `apps/github` receives GitHub webhook deliveries, verifies their signatures (via `@hono-kun/github`), deduplicates delivery ids in KV, and routes `pull_request` events to `@hono-kun/workflow-pull-request`. The workflow decides whether an event starts an evaluation (a newly opened PR, or the `ai:evaluate` label being added) and the app logs that decision — shadow mode. `apps/agents` hosts the first Flue agent (Reviewer) calling Claude through the `hono-kun` AI Gateway (unified billing, no provider keys); it is not yet wired to the webhook flow. Cloudflare Sandbox execution and the other agents are not implemented. Do not implement features that have not been requested.
 
 ## Repository layout
 
@@ -16,6 +16,7 @@ Early days. `apps/github` receives GitHub webhook deliveries, verifies their sig
 | ------------------------ | --------------------------------- | ----------------------------------------------- |
 | `apps/github`            | `@hono-kun/app-github`            | Public GitHub-facing Worker (Hono)              |
 | `apps/publisher`         | `@hono-kun/app-publisher`         | Trusted Worker for privileged GitHub writes     |
+| `apps/agents`            | `@hono-kun/app-agents`            | Flue agents Worker (Service Binding only)       |
 | `agents/verifier`        | `@hono-kun/agent-verifier`        | Verifies changes behave as claimed              |
 | `agents/reviewer`        | `@hono-kun/agent-reviewer`        | Reviews code changes                            |
 | `agents/contributor`     | `@hono-kun/agent-contributor`     | Interacts with contributors                     |
@@ -69,7 +70,8 @@ One PR = one concern. Do not force-push a branch under review.
 - Worker secrets (e.g. `GITHUB_WEBHOOK_SECRET` for `apps/github`) are set with `wrangler secret put`; locally, put them in a gitignored `.dev.vars` in the app directory.
 - Linting and formatting use the [Oxc](https://oxc.rs/) toolchain: oxlint (`pnpm lint`) and oxfmt (`pnpm format` / `pnpm format:check`, configured in `.oxfmtrc.json`).
 - Do not hard-wrap prose in Markdown files — write each paragraph and list item on a single line.
-- HTTP applications use Hono. Agents will be built with Flue (`@flue/sdk` / `@flue/runtime`, https://github.com/withastro/flue) — not added as a dependency until agents are actually implemented.
+- HTTP applications use Hono. Agents are built with [Flue](https://github.com/withastro/flue) and live in `apps/agents` (vite build: `flue()` + `cloudflare({ config: flueWorkerConfig() })`; one Durable Object SQLite migration per agent). Model calls go through the `hono-kun` AI Gateway via the AI binding — never add provider API keys. Claude 5 models need `thinkingLevel: 'off'` until Flue supports adaptive thinking. The `agents/*` packages will host shared agent logic as it grows.
+- `hono-kun-agents` has no route and no workers.dev — it must stay reachable only via a Service Binding.
 - Deployment target is Cloudflare Workers (`wrangler.jsonc` per app). Custom domains follow "worker name = subdomain" (e.g. `hono-kun-github.hono.dev`); `hono-kun.hono.dev` is reserved for a future public-facing page.
 - Merges to `main` deploy `apps/github` automatically via `.github/workflows/deploy.yml`. Do not deploy manually except in emergencies.
 - Documentation, code comments, and commit messages are in English.

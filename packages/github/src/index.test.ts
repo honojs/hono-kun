@@ -91,9 +91,9 @@ describe('toPullRequestEvent', () => {
       toPullRequestEvent({
         ...payload,
         action: 'labeled',
-        label: { name: 'hono-kun' },
+        label: { name: 'ai:evaluate' },
       }),
-    ).toMatchObject({ action: 'labeled', label: 'hono-kun' })
+    ).toMatchObject({ action: 'labeled', label: 'ai:evaluate' })
   })
 
   it('omits the label field when the payload has no label', () => {

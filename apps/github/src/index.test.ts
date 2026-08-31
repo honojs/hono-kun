@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import app from './index'
 
 const secret = 'test-secret'
@@ -14,10 +14,33 @@ const memoryKV = (): KVNamespace => {
   } as unknown as KVNamespace
 }
 
-const makeEnv = () => ({
+const agentsStub = () => {
+  const calls: { url: string; body: string }[] = []
+  const fetcher = {
+    fetch: async (url: string, init?: RequestInit) => {
+      calls.push({ url, body: String(init?.body) })
+      return new Response('{}', { status: 200 })
+    },
+  } as unknown as Fetcher
+  return { calls, fetcher }
+}
+
+const makeEnv = (agents = agentsStub()) => ({
   GITHUB_WEBHOOK_SECRET: secret,
   DELIVERIES: memoryKV(),
+  AGENTS: agents.fetcher,
 })
+
+const makeCtx = () => {
+  const tasks: Promise<unknown>[] = []
+  const ctx = {
+    waitUntil: (p: Promise<unknown>) => {
+      tasks.push(p)
+    },
+    passThroughOnException: () => {},
+  } as ExecutionContext
+  return { ctx, settle: () => Promise.all(tasks) }
+}
 
 const sign = async (secret: string, body: string): Promise<string> => {
   const key = await crypto.subtle.importKey(
@@ -39,8 +62,14 @@ const deliver = async (
   body: string,
   headers: Record<string, string>,
   env: ReturnType<typeof makeEnv> = makeEnv(),
+  ctx = makeCtx().ctx,
 ) =>
-  await app.request('/webhooks/github', { method: 'POST', body, headers }, env)
+  await app.request(
+    '/webhooks/github',
+    { method: 'POST', body, headers },
+    env,
+    ctx,
+  )
 
 const signedHeaders = async (body: string, delivery = 'delivery-id') => ({
   'x-github-event': 'pull_request',
@@ -59,6 +88,10 @@ const prPayload = JSON.stringify({
   },
 })
 
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
+
 describe('GET /', () => {
   it('responds with the service name', async () => {
     const res = await app.request('/', {}, makeEnv())
@@ -69,12 +102,66 @@ describe('GET /', () => {
 
 describe('POST /webhooks/github', () => {
   it('accepts a correctly signed pull_request delivery', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('diff --git a/x b/x')),
+    )
     const res = await deliver(prPayload, await signedHeaders(prPayload))
     expect(res.status).toBe(202)
     expect(await res.json()).toEqual({ ok: true })
   })
 
+  it('submits the diff to the Reviewer agent after responding', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('diff --git a/x b/x')),
+    )
+    const agents = agentsStub()
+    const { ctx, settle } = makeCtx()
+    const res = await deliver(
+      prPayload,
+      await signedHeaders(prPayload, 'delivery-42'),
+      makeEnv(agents),
+      ctx,
+    )
+    expect(res.status).toBe(202)
+    await settle()
+    expect(agents.calls).toHaveLength(1)
+    expect(agents.calls[0]?.url).toBe(
+      'https://hono-kun-agents/agents/reviewer/delivery-42',
+    )
+    const submitted = JSON.parse(agents.calls[0]?.body ?? '{}') as {
+      kind: string
+      body: string
+    }
+    expect(submitted.kind).toBe('user')
+    expect(submitted.body).toContain('PR #42 by someone: feat: add thing')
+    expect(submitted.body).toContain('diff --git a/x b/x')
+  })
+
+  it('does not reach the agent when the diff cannot be fetched', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('nope', { status: 404 })),
+    )
+    const agents = agentsStub()
+    const { ctx, settle } = makeCtx()
+    const res = await deliver(
+      prPayload,
+      await signedHeaders(prPayload),
+      makeEnv(agents),
+      ctx,
+    )
+    expect(res.status).toBe(202)
+    await settle()
+    expect(agents.calls).toHaveLength(0)
+  })
+
   it('skips a replayed delivery id', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('diff --git a/x b/x')),
+    )
     const env = makeEnv()
     const first = await deliver(prPayload, await signedHeaders(prPayload), env)
     expect(first.status).toBe(202)

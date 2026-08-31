@@ -9,10 +9,32 @@ const encoder = new TextEncoder()
 /** Caps what we feed to agents; beyond this a PR is too large to review meaningfully anyway. */
 const MAX_DIFF_CHARS = 80_000
 
+// Lockfile diffs add nothing to a review and burn tokens, so their contents are omitted.
+const GENERATED_FILE_PATTERNS = [
+  /(^|\/)pnpm-lock\.yaml$/,
+  /(^|\/)package-lock\.json$/,
+  /(^|\/)yarn\.lock$/,
+  /(^|\/)bun\.lockb?$/,
+]
+
+/**
+ * Replaces diff sections of generated files (lockfiles) with a one-line marker, keeping the fact that the file changed visible to the reviewer.
+ */
+export const stripGeneratedDiffs = (diff: string): string =>
+  diff
+    .split(/(?=^diff --git )/m)
+    .map((section) => {
+      const path = section.match(/^diff --git a\/(\S+) /)?.[1]
+      return path && GENERATED_FILE_PATTERNS.some((re) => re.test(path))
+        ? `(diff for ${path} omitted)\n`
+        : section
+    })
+    .join('')
+
 /**
  * Fetches the diff of a public pull request, without authentication.
  *
- * @returns The diff (truncated to {@link MAX_DIFF_CHARS}), or `null` when it cannot be fetched.
+ * @returns The diff (lockfile sections omitted, truncated to {@link MAX_DIFF_CHARS}), or `null` when it cannot be fetched.
  */
 export const fetchPullRequestDiff = async (
   repository: RepositoryRef,
@@ -28,7 +50,7 @@ export const fetchPullRequestDiff = async (
   if (!res.ok) {
     return null
   }
-  const diff = await res.text()
+  const diff = stripGeneratedDiffs(await res.text())
   return diff.length > MAX_DIFF_CHARS
     ? `${diff.slice(0, MAX_DIFF_CHARS)}\n… (diff truncated)`
     : diff

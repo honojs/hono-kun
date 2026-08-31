@@ -1,9 +1,52 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   fetchPullRequestDiff,
+  stripGeneratedDiffs,
   toPullRequestEvent,
   verifyWebhookSignature,
 } from './index'
+
+describe('stripGeneratedDiffs', () => {
+  const diff = [
+    'diff --git a/src/index.ts b/src/index.ts',
+    '--- a/src/index.ts',
+    '+++ b/src/index.ts',
+    '@@ -1 +1 @@',
+    '+const a = 1',
+    'diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml',
+    '--- a/pnpm-lock.yaml',
+    '+++ b/pnpm-lock.yaml',
+    '@@ -1,100 +1,200 @@',
+    '+  lots-of-lockfile-noise: true',
+    'diff --git a/README.md b/README.md',
+    '--- a/README.md',
+    '+++ b/README.md',
+    '@@ -1 +1 @@',
+    '+# hi',
+    '',
+  ].join('\n')
+
+  it('replaces lockfile sections with a marker and keeps the rest', () => {
+    const stripped = stripGeneratedDiffs(diff)
+    expect(stripped).toContain('diff --git a/src/index.ts b/src/index.ts')
+    expect(stripped).toContain('diff --git a/README.md b/README.md')
+    expect(stripped).toContain('(diff for pnpm-lock.yaml omitted)')
+    expect(stripped).not.toContain('lots-of-lockfile-noise')
+  })
+
+  it('handles lockfiles in subdirectories', () => {
+    const nested =
+      'diff --git a/apps/web/package-lock.json b/apps/web/package-lock.json\n+noise\n'
+    expect(stripGeneratedDiffs(nested)).toBe(
+      '(diff for apps/web/package-lock.json omitted)\n',
+    )
+  })
+
+  it('leaves diffs without lockfiles untouched', () => {
+    const plain = 'diff --git a/src/a.ts b/src/a.ts\n+const a = 1\n'
+    expect(stripGeneratedDiffs(plain)).toBe(plain)
+  })
+})
 
 afterEach(() => {
   vi.unstubAllGlobals()

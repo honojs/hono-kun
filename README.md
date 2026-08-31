@@ -4,8 +4,6 @@
 
 # Hono-kun
 
-English | [日本語](README.ja.md)
-
 Hono-kun is an AI maintainer for [Hono](https://github.com/honojs/hono).
 
 It evaluates incoming pull requests and acts on them: good ones proceed to review; low-quality, context-blind, or suspicious ones are closed with a reason. When a closed PR points at a real issue, Hono-kun authors a replacement PR itself — referencing the original, with code it derives from scratch.

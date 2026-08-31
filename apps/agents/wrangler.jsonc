@@ -7,6 +7,13 @@
   "workers_dev": false,
   "ai": { "binding": "AI" },
   "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hono-kun",
+      "database_id": "3b8d4c81-f8d1-402b-a7ff-bbe496c88002",
+    },
+  ],
   "migrations": [
     {
       "tag": "flue-class-FlueReviewerAgent",

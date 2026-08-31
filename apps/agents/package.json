@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@flue/runtime": "^2.0.3",
-    "hono": "^4.13.5"
+    "hono": "^4.13.5",
+    "valibot": "^1.4.2"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.54.2",

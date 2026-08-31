@@ -13,6 +13,7 @@ type Bindings = {
   GITHUB_WEBHOOK_SECRET: string
   DELIVERIES: KVNamespace
   AGENTS: Fetcher
+  DB: D1Database
 }
 
 // GitHub does not redeliver automatically after this window, so remembering deliveries longer buys nothing.
@@ -71,6 +72,24 @@ app.post('/webhooks/github', async (c) => {
           }),
         )
         // Evaluate after responding: GitHub expects a fast ack, the model turn runs async in the agents Worker.
+        c.executionCtx.waitUntil(
+          c.env.DB.prepare(
+            `INSERT INTO evaluations (delivery_id, repository, pr_number, pr_url, author, title, trigger_kind)
+             VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)
+             ON CONFLICT(delivery_id) DO UPDATE SET
+               repository = ?2, pr_number = ?3, pr_url = ?4, author = ?5, title = ?6, trigger_kind = ?7`,
+          )
+            .bind(
+              delivery,
+              `${pullRequestEvent.repository.owner}/${pullRequestEvent.repository.repo}`,
+              pullRequestEvent.number,
+              pullRequestEvent.url,
+              pullRequestEvent.author,
+              pullRequestEvent.title,
+              trigger,
+            )
+            .run(),
+        )
         c.executionCtx.waitUntil(
           evaluatePullRequest(pullRequestEvent, delivery, {
             fetchDiff: fetchPullRequestDiff,

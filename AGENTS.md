@@ -74,5 +74,5 @@ One PR = one concern. Do not force-push a branch under review.
 - `hono-kun-agents` has no route and no workers.dev — it must stay reachable only via a Service Binding.
 - Deployment target is Cloudflare Workers (`wrangler.jsonc` per app). Custom domains follow "worker name = subdomain" (e.g. `hono-kun-github.hono.dev`); `hono-kun.hono.dev` is reserved for a future public-facing page.
 - Merges to `main` deploy `apps/github` automatically via `.github/workflows/deploy.yml`. Do not deploy manually except in emergencies.
-- Major documentation (README.md, AGENTS.md) is in English. Code comments may be in Japanese. Commit messages and PR titles stay in English (conventional commits).
+- Documentation, code comments, and commit messages are in English. Conversation in PR and issue comments may be in Japanese.
 - The product name is written "Hono-kun" in prose. The repository, directory paths, and package scope stay lowercase (`hono-kun`, `@hono-kun/*`).

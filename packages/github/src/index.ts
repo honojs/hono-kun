@@ -9,7 +9,7 @@ const encoder = new TextEncoder()
 /** Caps what we feed to agents; beyond this a PR is too large to review meaningfully anyway. */
 const MAX_DIFF_CHARS = 80_000
 
-// ロックファイルの diff はレビューに寄与せずトークンを食うだけなので、中身を省略する
+// Lockfile diffs add nothing to a review and burn tokens, so their contents are omitted.
 const GENERATED_FILE_PATTERNS = [
   /(^|\/)pnpm-lock\.yaml$/,
   /(^|\/)package-lock\.json$/,

@@ -10,4 +10,11 @@
     { "binding": "DELIVERIES", "id": "8547d35113874ca68efc679c98df8388" },
   ],
   "services": [{ "binding": "AGENTS", "service": "hono-kun-agents" }],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hono-kun",
+      "database_id": "3b8d4c81-f8d1-402b-a7ff-bbe496c88002",
+    },
+  ],
 }

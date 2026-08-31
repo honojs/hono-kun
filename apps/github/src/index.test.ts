@@ -25,10 +25,25 @@ const agentsStub = () => {
   return { calls, fetcher }
 }
 
-const makeEnv = (agents = agentsStub()) => ({
+const d1Stub = () => {
+  const queries: { sql: string; params: unknown[] }[] = []
+  const db = {
+    prepare: (sql: string) => ({
+      bind: (...params: unknown[]) => ({
+        run: async () => {
+          queries.push({ sql, params })
+        },
+      }),
+    }),
+  } as unknown as D1Database
+  return { queries, db }
+}
+
+const makeEnv = (agents = agentsStub(), d1 = d1Stub()) => ({
   GITHUB_WEBHOOK_SECRET: secret,
   DELIVERIES: memoryKV(),
   AGENTS: agents.fetcher,
+  DB: d1.db,
 })
 
 const makeCtx = () => {
@@ -137,6 +152,33 @@ describe('POST /webhooks/github', () => {
     expect(submitted.kind).toBe('user')
     expect(submitted.body).toContain('PR #42 by someone: feat: add thing')
     expect(submitted.body).toContain('diff --git a/x b/x')
+  })
+
+  it('records a pending evaluation row when triggered', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('diff --git a/x b/x')),
+    )
+    const d1 = d1Stub()
+    const { ctx, settle } = makeCtx()
+    await deliver(
+      prPayload,
+      await signedHeaders(prPayload, 'delivery-42'),
+      makeEnv(agentsStub(), d1),
+      ctx,
+    )
+    await settle()
+    expect(d1.queries).toHaveLength(1)
+    expect(d1.queries[0]?.sql).toContain('INSERT INTO evaluations')
+    expect(d1.queries[0]?.params).toEqual([
+      'delivery-42',
+      'honojs/hono',
+      42,
+      'https://github.com/honojs/hono/pull/42',
+      'someone',
+      'feat: add thing',
+      'pr-opened',
+    ])
   })
 
   it('does not reach the agent when the diff cannot be fetched', async () => {
